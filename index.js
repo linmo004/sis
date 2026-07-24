@@ -25,7 +25,7 @@ const BUMP_MESSAGE_TEXT = '(⁠/⁠^⁠-⁠^⁠/⁠) 饱饱姐姐来顶帖啦，
 
 const DB_FILE = path.join(__dirname, 'database.json');
 
-// 初始本地数据库
+// 初始本地数据库结构
 let db = {
     bumpMessages: {},
     channelRestrictions: {}, 
@@ -41,15 +41,47 @@ let db = {
 // 防抖同步机制
 let saveTimer = null;
 
-// 加载本地数据库
-function loadDB() {
+// 从 GitHub 读取远程最新数据库（突破 1MB 限制并防止覆盖）
+async function loadDBFromGitHub() {
+    if (!GH_TOKEN || !GH_REPO) {
+        console.log('⚠️ 未配置 GH_TOKEN 或 GH_REPO，将仅使用本地数据库');
+        return loadDBLocal();
+    }
+    try {
+        console.log('⏳ 正在从 GitHub 拉取最新的全量数据库...');
+        const octokit = new Octokit({ auth: GH_TOKEN });
+        const [owner, repo] = GH_REPO.split('/');
+
+        // 获取文件元数据以拿到 download_url (防止文件大导致 getContent 报错)
+        const { data } = await octokit.repos.getContent({ owner, repo, path: 'database.json' });
+        
+        if (data && data.download_url) {
+            const res = await fetch(data.download_url);
+            if (res.ok) {
+                const remoteDB = await res.json();
+                db = { ...db, ...remoteDB };
+                // 刷入本地缓存文件
+                fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
+                console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 成功从 GitHub 同步最新数据库！目前共有 ${db.promptIdeas ? db.promptIdeas.length : 0} 条梗！`);
+                return;
+            }
+        }
+        loadDBLocal();
+    } catch (err) {
+        console.error('(⁠;⁠´⁠_⁠_⁠`⁠) 从 GitHub 拉取数据库失败，回退到本地加载:', err.message);
+        loadDBLocal();
+    }
+}
+
+// 备用本地加载函数
+function loadDBLocal() {
     if (fs.existsSync(DB_FILE)) {
         try {
             const data = fs.readFileSync(DB_FILE, 'utf8');
             db = { ...db, ...JSON.parse(data) };
-            console.log('(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 本地数据加载完毕！');
+            console.log('(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 已加载本地缓存数据库！');
         } catch (err) {
-            console.error('(⁠;⁠´⁠_⁠_⁠`⁠) 加载数据库失败:', err);
+            console.error('(⁠;⁠´⁠_⁠_⁠`⁠) 加载本地数据库失败:', err);
         }
     }
 }
@@ -61,13 +93,13 @@ function saveDB() {
         if (saveTimer) clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
             syncToGitHub('database.json', JSON.stringify(db, null, 2), '自动更新 Bot 数据库');
-        }, 3000);
+        }, 5000);
     } catch (err) {
         console.error('(⁠;⁠´⁠_⁠_⁠`⁠) 保存数据失败:', err);
     }
 }
 
-// GitHub 自动 Push 同步函数
+// GitHub 自动 Push 同步函数（适配大文件获取 SHA）
 async function syncToGitHub(filePath, content, commitMessage) {
     if (!GH_TOKEN || !GH_REPO) return;
     try {
@@ -76,8 +108,9 @@ async function syncToGitHub(filePath, content, commitMessage) {
 
         let sha;
         try {
+            // 使用 GitHub API 获取文件 SHA
             const { data } = await octokit.repos.getContent({ owner, repo, path: filePath });
-            sha = data.sha;
+            sha = Array.isArray(data) ? undefined : data.sha;
         } catch (e) {
             sha = undefined; 
         }
@@ -92,7 +125,7 @@ async function syncToGitHub(filePath, content, commitMessage) {
         });
         console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 成功同步数据文件至 GitHub: ${filePath}`);
     } catch (err) {
-        console.error('(⁠;⁠´⁠_⁠_⁠`⁠) GitHub 同步失败:', err);
+        console.error('(⁠;⁠´⁠_⁠_⁠`⁠) GitHub 同步失败:', err.message);
     }
 }
 
@@ -103,15 +136,16 @@ async function getBackupFromGitHub(filePath) {
         const octokit = new Octokit({ auth: GH_TOKEN });
         const [owner, repo] = GH_REPO.split('/');
         const { data } = await octokit.repos.getContent({ owner, repo, path: filePath });
-        const content = Buffer.from(data.content, 'base64').toString('utf8');
-        return JSON.parse(content);
+        if (data.download_url) {
+            const res = await fetch(data.download_url);
+            return await res.json();
+        }
+        return null;
     } catch (err) {
         console.error('(⁠;⁠´⁠_⁠_⁠`⁠) 读取 GitHub 备份失败:', err);
         return null;
     }
 }
-
-loadDB();
 
 // 注册斜杠指令
 const commands = [
@@ -187,7 +221,7 @@ const commands = [
     new SlashCommandBuilder().setName('随机日记').setDescription('随机抽取开盒过去的一篇日记'),
     new SlashCommandBuilder().setName('搜日记').setDescription('按关键词或日期查找日记').addStringOption(o => o.setName('查询内容').setDescription('关键词或日期').setRequired(true)),
 
-    // 8. AI 待聊梗/灵感 (2500+ 题库)
+    // 8. AI 待聊梗/灵感 (3400+ 题库)
     new SlashCommandBuilder().setName('抽灵感梗').setDescription('随机抽取一个可以和 AI 聊的灵感/梗'),
     new SlashCommandBuilder().setName('搜灵感梗').setDescription('搜索灵感梗库').addStringOption(o => o.setName('关键词').setDescription('关键词').setRequired(true)),
 
@@ -244,6 +278,10 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 client.once('ready', async () => {
     console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 机器人已登录：${client.user.tag}`);
+    
+    // 启动时优先从 GitHub 加载最新数据库
+    await loadDBFromGitHub();
+
     try {
         await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
         console.log('(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 斜杠指令注册完成！');
@@ -497,18 +535,18 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    // AI 待聊梗 / 灵感 (2500+ 题库)
+    // AI 待聊梗 / 灵感 (3400+ 题库)
     if (commandName === '抽灵感梗' || commandName === '搜灵感梗') {
         if (!checkChannelRestriction(interaction, '灵感梗')) return;
 
         if (commandName === '抽灵感梗') {
-            if (db.promptIdeas.length === 0) return interaction.reply('(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！可以按照教程一键导入 Excel 题库。');
+            if (!db.promptIdeas || db.promptIdeas.length === 0) return interaction.reply('(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！可以按照教程一键导入 Excel 题库。');
             const item = db.promptIdeas[Math.floor(Math.random() * db.promptIdeas.length)];
             return interaction.reply(`(⁠/⁠^⁠-⁠^⁠/⁠) **为您抽取一个与 AI 互动灵感梗：**\n> ${item.content}`);
         }
         if (commandName === '搜灵感梗') {
             const kw = interaction.options.getString('关键词');
-            const res = db.promptIdeas.filter(x => x.content && x.content.includes(kw));
+            const res = (db.promptIdeas || []).filter(x => x.content && x.content.includes(kw));
             if (res.length === 0) return interaction.reply(`(⁠・⁠_⁠・⁠;⁠) 梗库中未找到包含 [${kw}] 的内容。`);
             const list = res.slice(0, 5).map((x, i) => `${i + 1}. ${x.content}`).join('\n');
             return interaction.reply(`(⁠/⁠^⁠-⁠^⁠/⁠) **找到以下灵感梗（共 ${res.length} 条，展示前5条）：**\n${list}`);
