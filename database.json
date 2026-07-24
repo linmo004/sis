@@ -1,6 +1,8 @@
 {
   "bumpMessages": {},
-  "channelRestrictions": {},
+  "channelRestrictions": {
+    "纪念日": "1530153310252699648"
+  },
   "todos": [],
   "anniversaries": [],
   "clipboards": [
