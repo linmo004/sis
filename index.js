@@ -510,3 +510,12 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(TOKEN);
+// 专门骗过 Render Web Service 端口检测的小 HTTP 服务
+const http = require('http');
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot is running smooth! (⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و');
+}).listen(PORT, () => {
+    console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 端口监听已启动: ${PORT}`);
+});
