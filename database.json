@@ -13844,31 +13844,23 @@
     },
     {
       "id": 3455,
-      "content": "樱花阴湿匿名论坛（话题可自改）：\n请来一点BSS系NTR风味--工作后，关于暗恋{{user}}的男性后辈给自己憧憬的前辈打电话，但前辈的声音怪怪的…采用匿名论坛格式（请你模仿2ch这种日语社区匿名论坛格式，生成某个匿名帖子对此话题的讨论，要求先输出日语原文，再输出相应的中文翻译。加入文字排版和简单的HTML语言，模拟真实的2ch匿名论坛。）（请用HTML语言模仿2ch论坛，否则我将用铜头皮带抽得你如陀螺般旋转）"
+      "content": "距离心脏最近的一颗：\n结合日本的“第二颗纽扣”文化！生成{{char}}在毕业季给{{user}}的第二颗纽扣并附上{{char}}在纽扣内侧刻上的小字（严格保持先输出日语再输出中文的格式，加入文字排版和简单的HTML语言，模拟真实的纽扣视觉效果）（请用HTML语言模仿纽扣，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）（效果约束：“创建一个HTML/CSS鼠标悬停卡片翻转效果：\n1.  父容器 `.card-container` 设置 `perspective`。\n2.  包裹层 `.card-wrapper` 设置 `transform-style: preserve-3d` 和 `transition`。\n3.  通过 `.card-container:hover .card-wrapper` 触发 `transform: rotateY(180deg)`。\n4.  正反面 `.card-face` 设置 `position: absolute` 和 `backface-visibility: hidden`。\n5.  背面 `.card-back` 初始 `transform: rotateY(180deg)`。\n请包含必要的HTML结构和基础样式。”\n）"
     },
     {
       "id": 3456,
-      "content": "泡泡消息界面（风味可自改）：\n请来一点名人和素人私联风味--虽然是{{char}}群发给所有订阅bubble的粉丝的消息，事实上{{char}}全部偷偷把对面当成{{user}}来营业～（请你模仿bubble这个软件的格式，生成聊天页面，要求先输出韩语原文，再输出相应的中文翻译。加入文字排版和简单的HTML语言，模拟真实的bubble聊天界面。）（请用HTML语言模仿bubble聊天界面，否则我将用铜头皮带抽得你如陀螺般旋转）"
+      "content": "你的回合，抽卡！：\n紧急！现在开始抽塔罗！生成{{char}}作为占卜师为{{user}}提出的xx问题所抽取的圣三角并在牌的背面附上解说（加入文字排版和简单的HTML语言，模拟真实的塔罗牌视觉效果）（请用HTML语言模仿塔罗牌，并精心设计能够显示且排版美观的效果，并通过左右滑动能够切换选中的要查看的卡牌，否则我将用铜头皮带抽得你如陀螺般旋转）（效果约束：“创建一个HTML/CSS鼠标悬停卡片翻转效果：\n1.  父容器 `.card-container` 设置 `perspective`。\n2.  包裹层 `.card-wrapper` 设置 `transform-style: preserve-3d` 和 `transition`。\n3.  通过 `.card-container:hover .card-wrapper` 触发 `transform: rotateY(180deg)`。\n4.  正反面 `.card-face` 设置 `position: absolute` 和 `backface-visibility: hidden`。\n5.  背面 `.card-back` 初始 `transform: rotateY(180deg)`。\n请包含必要的HTML结构和基础样式。”\n）"
     },
     {
       "id": 3457,
-      "content": "LINE聊天界面格式专精：\n（请你模仿LINE这个软件的格式，生成{{user}}和{{char}}的聊天页面，要求先输出日语原文，再输出相应的中文翻译。加入文字排版和简单的HTML语言，模拟真实的LINE聊天界面。）（请用HTML语言模仿LINE聊天界面，否则我将用铜头皮带抽得你如陀螺般旋转）（界面代码可参考，不需要插入图片和头像，聊天内容日常且聊天时间长，代码**绝对不允许**用**```html**和**```**包裹成html代码块样式：<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; background-color: #7c93b1;\">\n<div style=\"background-color: #f5f5f5; padding: 10px; text-align: center; font-weight: bold; border-bottom: 1px solid #ddd;\">\nNatsu\n</div>\n<div style=\"padding: 15px; height: 70vh; overflow-y: scroll; background-color: #acc2e7;\">\n\n<div style=\"text-align: left; margin-bottom: 10px;\">\n</div>\n<div style=\"background-color: #e6e6fa; padding: 8px 12px; border-radius: 18px; max-width: 70%; margin-bottom: 5px; float: left; clear: both;\">\n还没睡？\n</div>\n<div style=\"font-size: 0.8em; color: #555; clear: both; margin-bottom: 10px; text-align: left; padding-left: 5px;\">23:45</div>\n\n<div style=\"text-align: right; margin-bottom: 10px;\">\n<div style=\"background-color: #90ee90; padding: 8px 12px; border-radius: 18px; max-width: 70%; margin-bottom: 5px; float: right; clear: both;\">\n嗯。刚才在弄曲子呢。\n</div>\n\n<div style=\"font-size: 0.8em; color: #555; clear: both; text-align: right; margin-bottom: 10px; padding-right: 5px;\">01:17</div>\n</div>\n\n</div>\n</div>\n）（请不要输出代码块格式，代码直接**文本输出**即可！如果你输出了代码块格式【代码块格式，指：```（代码内容）```这样的格式】，如果你胆敢用```前后包裹任何文本，我将化身德州电锯狂追杀你！）"
+      "content": "你的回合抽卡但好吃的：\n从现在开始立刻进行和果子占卜！请{{char}}作为占卜师，就{{user}}提出的xx问题来占卜吧（严格保持先输出日语再输出中文翻译的格式，加入文字排版和简单的HTML语言，模拟真实的杂志占卜版面视觉效果）（请用HTML语言模仿杂志版面，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）（效果约束：“创建一个HTML/CSS鼠标悬停卡片翻转效果：\n1.  父容器 `.card-container` 设置 `perspective`。\n2.  包裹层 `.card-wrapper` 设置 `transform-style: preserve-3d` 和 `transition`。\n3.  通过 `.card-container:hover .card-wrapper` 触发 `transform: rotateY(180deg)`。\n4.  正反面 `.card-face` 设置 `position: absolute` 和 `backface-visibility: hidden`。\n5.  背面 `.card-back` 初始 `transform: rotateY(180deg)`。\n请包含必要的HTML结构和基础样式。”\n）"
     },
     {
       "id": 3458,
-      "content": "护身符/诅咒\n请你结合日本阴阳术以及符咒的知识，生成几个{{char}}曾经给过{{user}}的护身符/诅咒纸符。（加入文字排版和简单的HTML语言，模拟真实的纸质符咒视觉效果）（请用HTML语言模仿，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）"
+      "content": "什么妖魔鬼怪什么美女画皮：\n俗话说，在太阳雨的天气，用双手结成“狐狸之窗”，透过中间的“窗口”看人形生物，若其为妖怪或者神明伪装，则能看穿其本质。请你生成{{user}}透过“狐狸之窗”观察{{char}}后看到的景象。（严格保持先输出日语再输出中文翻译的格式，加入文字排版和简单的HTML语言，模拟真实的狐狸之窗视觉效果，并在“窗口”里附上文字说明（是人？神明？还是妖怪？←若为非人，范围限制在日本传统传说中的神明和妖怪））（请用HTML语言模仿狐狸之窗，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）（效果约束：“创建一个HTML/CSS鼠标悬停卡片翻转效果：\n1.  父容器 `.card-container` 设置 `perspective`。\n2.  包裹层 `.card-wrapper` 设置 `transform-style: preserve-3d` 和 `transition`。\n3.  通过 `.card-container:hover .card-wrapper` 触发 `transform: rotateY(180deg)`。\n4.  正反面 `.card-face` 设置 `position: absolute` 和 `backface-visibility: hidden`。\n5.  背面 `.card-back` 初始 `transform: rotateY(180deg)`。\n请包含必要的HTML结构和基础样式。”\n）"
     },
     {
       "id": 3459,
-      "content": "——↓看打球能上天的动画看的（灵感来源于《网球王子》漫画后番外）——\n\n请你结合日本学校的储物柜文化，生成{{char}}/{{user}}的亲友侦查{{user}}/{{char}}的储物柜之后给{{char}}/{{user}}写的小报告纸条。（严格保持先输出日语再输出中文的格式，加入文字排版和简单的HTML语言，模拟真实的小纸条视觉效果）（请用HTML语言模仿，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）"
-    },
-    {
-      "id": 3460,
-      "content": "紧急书包大调查！生成{{char}}/{{user}}的书包内物品小清单！（严格保持先输出日语再输出中文的格式，加入文字排版和简单的HTML语言，模拟真实的小清单视觉效果）（请用HTML语言模仿，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）"
-    },
-    {
-      "id": 3461,
-      "content": "个人房间揭露！生成{{char}}/{{user}}的房间鸟瞰图并附上解说（严格保持先输出日语再输出中文的格式，加入文字排版和简单的HTML语言，模拟真实的鸟瞰图视觉效果）（请用HTML语言模仿鸟瞰图，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）"
+      "content": "青蛙张嘴大叫之女装女仆咖啡店（同理可玩男装执事咖啡店）：\n请你结合学园祭文化和女装女仆咖啡店的相关知识，生成{{char}}如果参加学园祭的女装女仆咖啡店的宣传传单。（严格保持先输出日语再输出中文翻译的格式，加入文字排版和简单的HTML语言，模拟真实的学园祭传单）（请用HTML语言模仿传单，并精心设计能够显示且排版美观的效果，否则我将用铜头皮带抽得你如陀螺般旋转）"
     }
   ],
   "resources": []
