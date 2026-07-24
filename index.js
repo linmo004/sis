@@ -358,13 +358,12 @@ async function autoBackupCommunity() {
     }
 }
 
-// 检查频道绑定 (改为仅自己可见提示)
+// 检查频道绑定
 function checkChannelRestriction(interaction, featureKey) {
     const boundChannelId = db.channelRestrictions[featureKey];
     if (boundChannelId && interaction.channelId !== boundChannelId) {
         interaction.reply({ 
-            content: `(⁠・⁠_⁠・⁠;⁠) 为了保持界面整洁，**【${featureKey}】** 功能已被限制在专用频道 <#${boundChannelId}> 使用哦！`, 
-            ephemeral: true 
+            content: `(⁠・⁠_⁠・⁠;⁠) 为了保持界面整洁，**【${featureKey}】** 功能已被限制在专用频道 <#${boundChannelId}> 使用哦！`
         });
         return false;
     }
@@ -372,8 +371,8 @@ function checkChannelRestriction(interaction, featureKey) {
 }
 
 const DECISION_PRESETS = {
-    '吃什么': ['火锅', '烧烤', '麻辣烫', '日料寿司', '肯德基/麦当劳', '轻食沙拉', '螺蛳粉', '家常炒菜', '喝奶茶代餐!'],
-    '看什么': ['热门新番动画', '悬疑烧脑电影', '轻松搞笑综艺', '治治愈系纪录片', '高分美剧/韩剧', '经典老片重温'],
+    '吃什么': ['火锅', '烧烤', '麻辣烫', '日料寿司', '肯德基/麦当劳', '轻食沙拉', '螺丝粉', '家常炒菜', '喝奶茶代餐!'],
+    '看什么': ['热门新番动画', '悬疑烧脑电影', '轻松搞笑综艺', '治愈系纪录片', '高分美剧/韩剧', '经典老片重温'],
     '玩什么': ['单机游戏大作', 'Steam 独立小游戏', '去灵感梗库抽卡与 AI 聊天', '整理 Discord 社区', '听音乐放松'],
     '学什么': ['敲一段新代码', '学个 Prompt 提示词技巧', '看一本技术/人文书', '背 20 个新单词', '研究一个新的小工具']
 };
@@ -386,7 +385,7 @@ const TAROT_CARDS = [
     { name: '星星', position: '正位', desc: '希望、灵感、治愈、美好的愿景。' }
 ];
 
-// 指令交互监听 (全部回复已设置为 ephemeral: true)
+// 指令交互监听 (全部回复已修改为普通公开消息)
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
     const { commandName } = interaction;
@@ -396,28 +395,28 @@ client.on('interactionCreate', async interaction => {
         const feature = interaction.options.getString('功能');
         db.channelRestrictions[feature] = interaction.channelId;
         saveDB();
-        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 绑定成功！已将功能 **【${feature}】** 限定在当前频道 <#${interaction.channelId}> 使用！`, ephemeral: true });
+        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 绑定成功！已将功能 **【${feature}】** 限定在当前频道 <#${interaction.channelId}> 使用！` });
     }
     if (commandName === '解绑功能频道') {
         const feature = interaction.options.getString('功能');
         delete db.channelRestrictions[feature];
         saveDB();
-        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已解除 **【${feature}】** 的频道限制，现在可以在任何地方使用啦！`, ephemeral: true });
+        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已解除 **【${feature}】** 的频道限制，现在可以在任何地方使用啦！` });
     }
     if (commandName === '查看功能绑定') {
         const keys = Object.keys(db.channelRestrictions);
-        if (keys.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 目前所有功能都处于【全局可用】状态，没有设置频道限制。', ephemeral: true });
+        if (keys.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 目前所有功能都处于【全局可用】状态，没有设置频道限制。' });
         const list = keys.map(k => `• **${k}** ➔ 限定频道: <#${db.channelRestrictions[k]}>`).join('\n');
-        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **当前功能频道绑定清单：**\n${list}`, ephemeral: true });
+        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **当前功能频道绑定清单：**\n${list}` });
     }
 
     if (commandName === '回顶') {
-        if (!interaction.channel.isThread()) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 只能在帖子内部使用哦！', ephemeral: true });
+        if (!interaction.channel.isThread()) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 只能在帖子内部使用哦！' });
         const topMessageUrl = `https://discord.com/channels/${interaction.guildId}/${interaction.channel.id}/${interaction.channel.id}`;
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder().setLabel('(^ - ^)/ 饱饱急急慢不要来~姐姐来啦 点击直达帖子顶部').setStyle(ButtonStyle.Link).setURL(topMessageUrl)
         );
-        return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 摸摸饱饱 点击下方按钮即可快速返回首条消息：', components: [row], ephemeral: true });
+        return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 摸摸饱饱 点击下方按钮即可快速返回首条消息：', components: [row] });
     }
 
     // 随机决策 / 摇号 / 骰子
@@ -425,20 +424,20 @@ client.on('interactionCreate', async interaction => {
         const type = interaction.options.getString('类型');
         const choices = DECISION_PRESETS[type] || ['选项A', '选项B'];
         const result = choices[Math.floor(Math.random() * choices.length)];
-        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **关于【${type}】，姐姐帮为你抽取决定：**\n> ✨ **${result}** ✨`, ephemeral: true });
+        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **关于【${type}】，姐姐帮为你抽取决定：**\n> ✨ **${result}** ✨` });
     }
     if (commandName === '灵感摇号') {
         const rawOptions = interaction.options.getString('选项');
         const list = rawOptions.trim().split(/\s+/);
-        if (list.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 请提供至少一个选项，用空格分开哦！', ephemeral: true });
+        if (list.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 请提供至少一个选项，用空格分开哦！' });
         const picked = list[Math.floor(Math.random() * list.length)];
-        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **摇号完成！从 [${list.join(', ')}] 中抽中了：**\n> ✨ **${picked}** ✨`, ephemeral: true });
+        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **摇号完成！从 [${list.join(', ')}] 中抽中了：**\n> ✨ **${picked}** ✨` });
     }
     if (commandName === '掷骰') {
         const max = interaction.options.getInteger('最大值') || 6;
-        if (max < 1) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 最大值必须大于 0 哦！', ephemeral: true });
+        if (max < 1) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 最大值必须大于 0 哦！' });
         const num = Math.floor(Math.random() * max) + 1;
-        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) 🎲 **掷骰结果 (1-${max})：** **${num}**`, ephemeral: true });
+        return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) 🎲 **掷骰结果 (1-${max})：** **${num}**` });
     }
 
     // 纪念日
@@ -451,12 +450,12 @@ client.on('interactionCreate', async interaction => {
             const advanceDays = interaction.options.getInteger('提前天数') || 3;
             db.anniversaries.push({ name, date, advanceDays });
             saveDB();
-            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已记录纪念日 **【${name}】** (${date})！`, ephemeral: true });
+            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已记录纪念日 **【${name}】** (${date})！` });
         }
         if (commandName === '查看纪念日') {
-            if (db.anniversaries.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 目前还没有记录任何纪念日哦！', ephemeral: true });
+            if (db.anniversaries.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 目前还没有记录任何纪念日哦！' });
             const list = db.anniversaries.map((x, i) => `${i + 1}. **${x.name}** (${x.date})`).join('\n');
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **纪念日清单：**\n${list}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **纪念日清单：**\n${list}` });
         }
     }
 
@@ -466,19 +465,19 @@ client.on('interactionCreate', async interaction => {
             const content = interaction.options.getString('内容');
             db.todos.push(content);
             saveDB();
-            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 成功记下便签: **${content}**`, ephemeral: true });
+            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 成功记下便签: **${content}**` });
         }
         if (commandName === '查看便签') {
-            if (db.todos.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 便签夹里空空如也~', ephemeral: true });
+            if (db.todos.length === 0) return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 便签夹里空空如也~' });
             const list = db.todos.map((x, i) => `${i + 1}. ${x}`).join('\n');
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **当前便签清单：**\n${list}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **当前便签清单：**\n${list}` });
         }
         if (commandName === '删除便签') {
             const index = interaction.options.getInteger('编号') - 1;
-            if (index < 0 || index >= db.todos.length) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 输入的编号不存在哦！', ephemeral: true });
+            if (index < 0 || index >= db.todos.length) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 输入的编号不存在哦！' });
             const removed = db.todos.splice(index, 1);
             saveDB();
-            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已删除便签: **${removed[0]}**`, ephemeral: true });
+            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已删除便签: **${removed[0]}**` });
         }
     }
 
@@ -490,14 +489,14 @@ client.on('interactionCreate', async interaction => {
             const content = interaction.options.getString('内容');
             db.clipboards.push({ content, date: new Date().toLocaleString() });
             saveDB();
-            return interaction.reply({ content: `(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 已存入剪贴板档案库！`, ephemeral: true });
+            return interaction.reply({ content: `(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 已存入剪贴板档案库！` });
         }
         if (commandName === '搜剪贴板') {
             const keyword = interaction.options.getString('关键词');
             const results = db.clipboards.filter(x => x.content.includes(keyword));
-            if (results.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 未查找到包含关键词 [${keyword}] 的记录。`, ephemeral: true });
+            if (results.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 未查找到包含关键词 [${keyword}] 的记录。` });
             const list = results.map((x, i) => `${i + 1}. [${x.date}] ${x.content}`).slice(0, 5).join('\n');
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **剪贴板检索结果：**\n${list}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **剪贴板检索结果：**\n${list}` });
         }
     }
 
@@ -509,12 +508,12 @@ client.on('interactionCreate', async interaction => {
             const content = interaction.options.getString('内容');
             db.diaries.push({ date: new Date().toISOString().slice(0, 10), content });
             saveDB();
-            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 日记胶囊已封存！`, ephemeral: true });
+            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 日记胶囊已封存！` });
         }
         if (commandName === '随机日记') {
-            if (db.diaries.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 还没有写过日记哦！', ephemeral: true });
+            if (db.diaries.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 还没有写过日记哦！' });
             const item = db.diaries[Math.floor(Math.random() * db.diaries.length)];
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **开启历史日记胶囊 [${item.date}]：**\n> ${item.content}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **开启历史日记胶囊 [${item.date}]：**\n> ${item.content}` });
         }
     }
 
@@ -523,16 +522,16 @@ client.on('interactionCreate', async interaction => {
         if (!checkChannelRestriction(interaction, '灵感梗')) return;
 
         if (commandName === '抽灵感梗') {
-            if (!db.promptIdeas || db.promptIdeas.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！', ephemeral: true });
+            if (!db.promptIdeas || db.promptIdeas.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！' });
             const item = db.promptIdeas[Math.floor(Math.random() * db.promptIdeas.length)];
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **为您抽取一个与 AI 互动灵感梗：**\n> ${item.content}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **为您抽取一个与 AI 互动灵感梗：**\n> ${item.content}` });
         }
         if (commandName === '搜灵感梗') {
             const kw = interaction.options.getString('关键词');
             const res = (db.promptIdeas || []).filter(x => x.content && x.content.includes(kw));
-            if (res.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 梗库中未找到包含 [${kw}] 的内容。`, ephemeral: true });
+            if (res.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 梗库中未找到包含 [${kw}] 的内容。` });
             const list = res.slice(0, 5).map((x, i) => `${i + 1}. ${x.content}`).join('\n');
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **找到以下灵感梗（共 ${res.length} 条，展示前5条）：**\n${list}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **找到以下灵感梗（共 ${res.length} 条，展示前5条）：**\n${list}` });
         }
     }
 
@@ -545,14 +544,14 @@ client.on('interactionCreate', async interaction => {
             const content = interaction.options.getString('剧情');
             db.memories.push({ character: char, content, date: new Date().toISOString().slice(0, 10) });
             saveDB();
-            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已为您保存与角色 **【${char}】** 的名场面回忆！`, ephemeral: true });
+            return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) 已为您保存与角色 **【${char}】** 的名场面回忆！` });
         }
         if (commandName === '看回忆') {
             const char = interaction.options.getString('角色');
             let filtered = char ? db.memories.filter(x => x.character === char) : db.memories;
-            if (filtered.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 还没有记录过 ${char ? '角色【' + char + '】的' : ''}名场面回忆哦！`, ephemeral: true });
+            if (filtered.length === 0) return interaction.reply({ content: `(⁠・⁠_⁠・⁠;⁠) 还没有记录过 ${char ? '角色【' + char + '】的' : ''}名场面回忆哦！` });
             const item = filtered[Math.floor(Math.random() * filtered.length)];
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **重温名场面 [角色: ${item.character}] (${item.date})：**\n> ${item.content}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **重温名场面 [角色: ${item.character}] (${item.date})：**\n> ${item.content}` });
         }
     }
 
@@ -582,7 +581,7 @@ client.on('interactionCreate', async interaction => {
                 )
                 .setFooter({ text: `录入时间: ${item.date}` });
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed] });
         }
 
         if (commandName === '搜资源') {
@@ -596,19 +595,19 @@ client.on('interactionCreate', async interaction => {
             if (author) results = results.filter(x => x.author.toLowerCase().includes(author.toLowerCase()));
             if (kw) results = results.filter(x => x.name.includes(kw) || x.note.includes(kw));
 
-            if (results.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 未找到符合条件的资源记录哦！', ephemeral: true });
+            if (results.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 未找到符合条件的资源记录哦！' });
 
             const list = results.slice(0, 5).map((x, i) => 
                 `**${i + 1}. [${x.category}] ${x.name}** (作者: ${x.author})\n> 🔗 链接: ${x.link}\n> 📝 备注: ${x.note}`
             ).join('\n\n');
 
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **档案馆检索结果 (找到 ${results.length} 项，展示前5项)：**\n\n${list}`, ephemeral: true });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **档案馆检索结果 (找到 ${results.length} 项，展示前5项)：**\n\n${list}` });
         }
 
         if (commandName === '抓取本帖资源') {
-            if (!interaction.channel.isThread()) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 此指令必须在论坛帖子内使用哦！', ephemeral: true });
+            if (!interaction.channel.isThread()) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 此指令必须在论坛帖子内使用哦！' });
 
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply();
             try {
                 const firstMessage = await interaction.channel.fetchStarterMessage().catch(() => null);
 
@@ -635,19 +634,19 @@ client.on('interactionCreate', async interaction => {
         if (!checkChannelRestriction(interaction, '塔罗运势')) return;
 
         const card = TAROT_CARDS[Math.floor(Math.random() * TAROT_CARDS.length)];
-        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) **塔罗牌抽卡：**\n> 牌面：**【${card.name}】** (${card.position})\n> 牌意：${card.desc}`, ephemeral: true });
+        return interaction.reply({ content: `(⁠*⁠^⁠-⁠^⁠*⁠) **塔罗牌抽卡：**\n> 牌面：**【${card.name}】** (${card.position})\n> 牌意：${card.desc}` });
     }
 
     // 全社区备份
     if (commandName === '全社区备份') {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         await autoBackupCommunity();
         return interaction.editReply('(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 全社区聊天历史与帖子已成功抓取，并直接覆盖更新提交至 GitHub 的 `community_backup.json` 文件！');
     }
 
     // 还原社区
     if (commandName === '还原社区') {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         const backupData = await getBackupFromGitHub('community_backup.json');
         if (!backupData || !backupData.channels) {
             return interaction.editReply('(⁠;⁠´⁠_⁠_⁠`⁠) 无法从 GitHub 读取备份文件 `community_backup.json`，还原中断。');
@@ -691,13 +690,13 @@ client.on('interactionCreate', async interaction => {
                 }
             }
 
-            return interaction.followUp({ content: '(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و **社区结构与历史消息已成功从 GitHub 备份中全部重建还原！**', ephemeral: true });
+            return interaction.followUp({ content: '(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و **社区结构与历史消息已成功从 GitHub 备份中全部重建还原！**' });
         } catch (err) {
             console.error('还原社区出现异常:', err);
-            return interaction.followUp({ content: '(⁠;⁠´⁠_⁠_⁠`⁠) 还原过程中发生错误，请检查机器人是否拥有管理频道的权限。', ephemeral: true });
+            return interaction.followUp({ content: '(⁠;⁠´⁠_⁠_⁠`⁠) 还原过程中发生错误，请检查机器人是否拥有管理频道的权限。' });
         }
     }
-}); // <--- 这里补上了闭合大括号！
+}); 
 
 // 防止 Render 报端口缺失的 HTTP 服务
 const PORT = process.env.PORT || 3000;
