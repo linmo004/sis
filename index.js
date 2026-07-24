@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, ActionRowB
 const fs = require('fs');
 const path = require('path');
 const { Octokit } = require('@octokit/rest');
+const http = require('http');
 
 const client = new Client({
     intents: [
@@ -106,7 +107,7 @@ async function getBackupFromGitHub(filePath) {
 
 loadDB();
 
-// 注册斜杠指令
+// 注册斜杠指令 (修复了描述文本缺失的问题)
 const commands = [
     new SlashCommandBuilder().setName('回顶').setDescription('生成一个可直接回到帖子顶部的快速跳转按钮'),
     
@@ -139,7 +140,7 @@ const commands = [
     new SlashCommandBuilder()
         .setName('随机决策')
         .setDescription('解决选择困难症！')
-        .addStringOption(o => o.setName('类型').setDescription('选择类型').setRequired(true)
+        .addStringOption(o => o.setName('类型').setDescription('选择决策类型').setRequired(true)
             .addChoices(
                 { name: '吃什么', value: '吃什么' },
                 { name: '看什么', value: '看什么' },
@@ -156,36 +157,36 @@ const commands = [
         .addIntegerOption(o => o.setName('提前天数').setDescription('提前几天提醒').setRequired(false)),
     new SlashCommandBuilder().setName('查看纪念日').setDescription('查看所有纪念日倒计时'),
 
-    // 3. 便签
-    new SlashCommandBuilder().setName('记便签').setDescription('添加备忘').addStringOption(o => o.setName('内容').setRequired(true)),
+    // 3. 便签 (此处已补充完整 description)
+    new SlashCommandBuilder().setName('记便签').setDescription('添加备忘便签').addStringOption(o => o.setName('内容').setDescription('要记录的便签内容').setRequired(true)),
     new SlashCommandBuilder().setName('查看便签').setDescription('查看便签列表'),
-    new SlashCommandBuilder().setName('删除便签').setDescription('删除指定便签').addIntegerOption(o => o.setName('编号').setRequired(true)),
+    new SlashCommandBuilder().setName('删除便签').setDescription('删除指定便签').addIntegerOption(o => o.setName('编号').setDescription('要删除的便签序号').setRequired(true)),
 
     // 4. 塔罗与运势
     new SlashCommandBuilder().setName('每日运势').setDescription('抽取今日专属运势'),
     new SlashCommandBuilder().setName('塔罗占卜').setDescription('专业塔罗牌解读'),
 
     // 5. 无限剪贴板
-    new SlashCommandBuilder().setName('存剪贴板').setDescription('永久保存文本/链接').addStringOption(o => o.setName('内容').setRequired(true)),
-    new SlashCommandBuilder().setName('搜剪贴板').setDescription('检索历史剪贴板').addStringOption(o => o.setName('关键词').setRequired(true)),
+    new SlashCommandBuilder().setName('存剪贴板').setDescription('永久保存文本/链接').addStringOption(o => o.setName('内容').setDescription('要保存的文本或链接').setRequired(true)),
+    new SlashCommandBuilder().setName('搜剪贴板').setDescription('检索历史剪贴板').addStringOption(o => o.setName('关键词').setDescription('要搜索的关键词').setRequired(true)),
 
     // 6. 摇号与骰子
-    new SlashCommandBuilder().setName('灵感摇号').setDescription('从多选项中随机摇号').addStringOption(o => o.setName('选项').setDescription('空格隔开').setRequired(true)),
-    new SlashCommandBuilder().setName('掷骰').setDescription('随机抽取数字').addIntegerOption(o => o.setName('最大值').setRequired(false)),
+    new SlashCommandBuilder().setName('灵感摇号').setDescription('从多选项中随机摇号').addStringOption(o => o.setName('选项').setDescription('用空格隔开各个选项').setRequired(true)),
+    new SlashCommandBuilder().setName('掷骰').setDescription('随机抽取数字').addIntegerOption(o => o.setName('最大值').setDescription('骰子最大数字(默认6)').setRequired(false)),
 
     // 7. 碎碎念日记
-    new SlashCommandBuilder().setName('写日记').setDescription('记录心情胶囊').addStringOption(o => o.setName('内容').setRequired(true)),
+    new SlashCommandBuilder().setName('写日记').setDescription('记录心情胶囊').addStringOption(o => o.setName('内容').setDescription('日记内容').setRequired(true)),
     new SlashCommandBuilder().setName('随机日记').setDescription('随机抽取开盒过去的一篇日记'),
-    new SlashCommandBuilder().setName('搜日记').setDescription('按关键词或日期查找日记').addStringOption(o => o.setName('查询内容').setRequired(true)),
+    new SlashCommandBuilder().setName('搜日记').setDescription('按关键词或日期查找日记').addStringOption(o => o.setName('查询内容').setDescription('关键词或日期').setRequired(true)),
 
-    // 8. 模块A：AI 待聊梗/灵感 (2500+ 专属)
+    // 8. 模块A：AI 待聊梗/灵感
     new SlashCommandBuilder().setName('抽灵感梗').setDescription('随机抽取一个可以和 AI 聊的灵感/梗'),
-    new SlashCommandBuilder().setName('搜灵感梗').setDescription('搜索灵感梗库').addStringOption(o => o.setName('关键词').setRequired(true)),
+    new SlashCommandBuilder().setName('搜灵感梗').setDescription('搜索灵感梗库').addStringOption(o => o.setName('关键词').setDescription('关键词').setRequired(true)),
 
     // 9. 模块B：与 AI 经历过的名场面回忆
     new SlashCommandBuilder().setName('存回忆').setDescription('记录与角色经历过的甜爆/名场面')
-        .addStringOption(o => o.setName('角色').setRequired(true))
-        .addStringOption(o => o.setName('剧情').setRequired(true)),
+        .addStringOption(o => o.setName('角色').setDescription('角色名字').setRequired(true))
+        .addStringOption(o => o.setName('剧情').setDescription('名场面剧情描述').setRequired(true)),
     new SlashCommandBuilder().setName('看回忆').setDescription('回顾与角色的历史名场面')
         .addStringOption(o => o.setName('角色').setDescription('不填则随机全部角色').setRequired(false)),
 
@@ -238,7 +239,7 @@ async function checkAndBumpThreads() {
     }
 }
 
-// 核心：全社区聊天记录与帖子抓取 -> **全量覆盖备份** 到 GitHub
+// 核心：全社区聊天记录与帖子抓取 -> 全量覆盖备份到 GitHub
 async function autoBackupCommunity() {
     console.log('(⁠*⁠´⁠ω⁠｀⁠*⁠) 开始全量抓取全社区聊天历史与帖子数据...');
     let fullBackupData = {
@@ -254,17 +255,15 @@ async function autoBackupCommunity() {
 
                 let channelData = { name: channel.name, type: channel.type, messages: [], threads: [] };
 
-                // 抓取频道前 100 条历史消息
                 const msgs = await channel.messages.fetch({ limit: 100 }).catch(() => null);
                 if (msgs) {
                     msgs.forEach(m => {
-                        if (!m.author.bot) { // 过滤掉机器人自己的系统消息
+                        if (!m.author.bot) {
                             channelData.messages.unshift({ author: m.author.tag, content: m.content, time: m.createdAt });
                         }
                     });
                 }
 
-                // 抓取论坛帖子 Thread 内部消息
                 if (channel.threads) {
                     const threads = await channel.threads.fetchActive().catch(() => null);
                     if (threads) {
@@ -320,7 +319,7 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
     const { commandName } = interaction;
 
-    // --- 频道绑定管理逻辑 ---
+    // 频道绑定管理
     if (commandName === '指定功能频道') {
         const feature = interaction.options.getString('功能');
         db.channelRestrictions[feature] = interaction.channelId;
@@ -349,8 +348,6 @@ client.on('interactionCreate', async interaction => {
         return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 摸摸饱饱 点击下方按钮即可快速返回首条消息：', components: [row] });
     }
 
-    // --- 各功能区域 (包含频道校验) ---
-
     // 纪念日
     if (commandName === '设置纪念日' || commandName === '查看纪念日') {
         if (!checkChannelRestriction(interaction, '纪念日')) return;
@@ -367,6 +364,28 @@ client.on('interactionCreate', async interaction => {
             if (db.anniversaries.length === 0) return interaction.reply('(⁠*⁠^⁠-⁠^⁠*⁠) 目前还没有记录任何纪念日哦！');
             const list = db.anniversaries.map((x, i) => `${i + 1}. **${x.name}** (${x.date})`).join('\n');
             return interaction.reply(`(⁠/⁠^⁠-⁠^⁠/⁠) **纪念日清单：**\n${list}`);
+        }
+    }
+
+    // 便签
+    if (commandName === '记便签' || commandName === '查看便签' || commandName === '删除便签') {
+        if (commandName === '记便签') {
+            const content = interaction.options.getString('内容');
+            db.todos.push(content);
+            saveDB();
+            return interaction.reply(`(⁠*⁠^⁠-⁠^⁠*⁠) 成功记下便签: **${content}**`);
+        }
+        if (commandName === '查看便签') {
+            if (db.todos.length === 0) return interaction.reply('(⁠*⁠^⁠-⁠^⁠*⁠) 便签夹里空空如也~');
+            const list = db.todos.map((x, i) => `${i + 1}. ${x}`).join('\n');
+            return interaction.reply(`(⁠/⁠^⁠-⁠^⁠/⁠) **当前便签清单：**\n${list}`);
+        }
+        if (commandName === '删除便签') {
+            const index = interaction.options.getInteger('编号') - 1;
+            if (index < 0 || index >= db.todos.length) return interaction.reply('(⁠・⁠_⁠・⁠;⁠) 输入的编号不存在哦！');
+            const removed = db.todos.splice(index, 1);
+            saveDB();
+            return interaction.reply(`(⁠*⁠^⁠-⁠^⁠*⁠) 已删除便签: **${removed[0]}**`);
         }
     }
 
@@ -411,7 +430,7 @@ client.on('interactionCreate', async interaction => {
         if (!checkChannelRestriction(interaction, '灵感梗')) return;
 
         if (commandName === '抽灵感梗') {
-            if (db.promptIdeas.length === 0) return interaction.reply('(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！可以将 Excel 里的灵感导入存入。');
+            if (db.promptIdeas.length === 0) return interaction.reply('(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！');
             const item = db.promptIdeas[Math.floor(Math.random() * db.promptIdeas.length)];
             return interaction.reply(`(⁠/⁠^⁠-⁠^⁠/⁠) **为您抽取一个与 AI 互动灵感梗：**\n> ${item.content}`);
         }
@@ -452,7 +471,7 @@ client.on('interactionCreate', async interaction => {
         return interaction.editReply('(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 全社区聊天历史与帖子已成功抓取，并直接覆盖更新提交至 GitHub 的 `community_backup.json` 文件！');
     }
 
-    // 🌟 一键还原社区脚本 🌟
+    // 一键还原社区
     if (commandName === '还原社区') {
         await interaction.deferReply();
         const backupData = await getBackupFromGitHub('community_backup.json');
@@ -465,7 +484,6 @@ client.on('interactionCreate', async interaction => {
             await interaction.editReply(`(⁠*⁠´⁠ω⁠｀⁠*⁠) 开始读取备份数据（备份时间: ${backupData.last_updated}），准备重建社区架构...`);
 
             for (const [chanName, chanData] of Object.entries(backupData.channels)) {
-                // 检查频道是否已存在，不存在则新建
                 let targetChannel = guild.channels.cache.find(c => c.name === chanName);
                 if (!targetChannel) {
                     targetChannel = await guild.channels.create({
@@ -474,7 +492,6 @@ client.on('interactionCreate', async interaction => {
                     });
                 }
 
-                // 还原普通频道历史消息
                 if (chanData.messages && chanData.messages.length > 0 && targetChannel.isTextBased()) {
                     for (const m of chanData.messages) {
                         const timeStr = new Date(m.time).toLocaleString();
@@ -482,7 +499,6 @@ client.on('interactionCreate', async interaction => {
                     }
                 }
 
-                // 还原论坛帖子 Threads 及内部消息
                 if (chanData.threads && chanData.threads.length > 0 && targetChannel.threads) {
                     for (const threadData of chanData.threads) {
                         let newThread = await targetChannel.threads.create({
@@ -509,13 +525,13 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login(TOKEN);
-// 专门骗过 Render Web Service 端口检测的小 HTTP 服务
-const http = require('http');
+// 防止 Render 报端口缺失的小服务
 const PORT = process.env.PORT || 3000;
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Bot is running smooth! (⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و');
 }).listen(PORT, () => {
-    console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 端口监听已启动: ${PORT}`);
+    console.log(`(⁠•⁠̀⁠ᴗ⁠•⁠́⁠)⁠و 伪装端口监听启动: ${PORT}`);
 });
+
+client.login(TOKEN);
