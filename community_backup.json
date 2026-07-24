@@ -1,0 +1,161 @@
+{
+  "last_updated": "7/24/2026, 10:00:12 AM",
+  "channels": {
+    "饱饱来啦ᜊ•͈⌔•͈ᜊ": {
+      "name": "饱饱来啦ᜊ•͈⌔•͈ᜊ",
+      "type": 0,
+      "messages": [
+        {
+          "author": "guoxiao4444",
+          "content": "",
+          "time": "2026-07-23T17:13:13.432Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "饱饱好",
+          "time": "2026-07-23T17:13:38.656Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "想吃什么跟姐姐说",
+          "time": "2026-07-23T17:13:45.381Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "姐姐帮你找",
+          "time": "2026-07-23T17:13:53.570Z"
+        },
+        {
+          "author": "guoxiao4444",
+          "content": "好哦",
+          "time": "2026-07-23T17:27:53.217Z"
+        },
+        {
+          "author": "guoxiao4444",
+          "content": "谢谢姐姐",
+          "time": "2026-07-23T17:27:55.564Z"
+        }
+      ],
+      "threads": []
+    },
+    "ꕤᴗ ᴗ)♡": {
+      "name": "ꕤᴗ ᴗ)♡",
+      "type": 2,
+      "messages": [],
+      "threads": []
+    },
+    "姐姐请客•˶ɞ˶•": {
+      "name": "姐姐请客•˶ɞ˶•",
+      "type": 0,
+      "messages": [
+        {
+          "author": "mox.ing",
+          "content": "吃点咔/.(•̀ө•́ )",
+          "time": "2026-07-23T17:24:47.442Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "来点薯/.ᜊ•͈⌔•͈ᜊ",
+          "time": "2026-07-23T17:25:14.116Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "尝尝鱼she/.◔̯◔ᐝ",
+          "time": "2026-07-23T17:26:18.348Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "这里没有哦/.ʕ•͈⚇•͈ʔ",
+          "time": "2026-07-23T17:26:52.465Z"
+        },
+        {
+          "author": "mox.ing",
+          "content": "百无禁忌 请随意点餐/.ꕤᴗ ᴗ)♡",
+          "time": "2026-07-23T17:27:22.871Z"
+        }
+      ],
+      "threads": [
+        {
+          "name": "百无禁忌 请随意点餐/.ꕤᴗ ᴗ)♡",
+          "messages": []
+        },
+        {
+          "name": "这里没有哦/.ʕ•͈⚇•͈ʔ",
+          "messages": []
+        },
+        {
+          "name": "尝尝鱼she/.◔̯◔ᐝ",
+          "messages": []
+        },
+        {
+          "name": "来点薯/.₍ᵔ･•･ᵔ₎",
+          "messages": [
+            {
+              "author": "mox.ing",
+              "content": "来点薯/.₍ᵔ･•･ᵔ₎",
+              "time": "2026-07-23T17:25:37.918Z"
+            }
+          ]
+        },
+        {
+          "name": "吃点咔/.(•̀ө•́ )",
+          "messages": []
+        }
+      ]
+    },
+    "预设请吃_子区版♪´ε｀": {
+      "name": "预设请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "角色卡请吃_子区版♪´ε｀": {
+      "name": "角色卡请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "世界书请吃_子区版♪´ε｀": {
+      "name": "世界书请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "美化请吃_子区版♪´ε｀": {
+      "name": "美化请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "工具区请吃_子区版♪´ε｀": {
+      "name": "工具区请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "跑图请吃_子区版♪´ε｀": {
+      "name": "跑图请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "公益站请吃_子区版♪´ε｀": {
+      "name": "公益站请吃_子区版♪´ε｀",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "子区版！๓qxq๓♡": {
+      "name": "子区版！๓qxq๓♡",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    },
+    "子区版鱼麝๓ywy๓♡": {
+      "name": "子区版鱼麝๓ywy๓♡",
+      "type": 0,
+      "messages": [],
+      "threads": []
+    }
+  }
+}
