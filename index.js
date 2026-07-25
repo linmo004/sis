@@ -156,7 +156,7 @@ const commands = [
                 { name: '纪念日提醒', value: '纪念日' },
                 { name: '碎碎念日记', value: '日记' },
                 { name: '无限剪贴板', value: '剪贴板' },
-                { name: 'AI灵感梗库', value: '灵感梗' },
+                { name: '剧场灵感梗库', value: '灵感梗' },
                 { name: '名场面回忆录', value: '回忆录' },
                 { name: '塔罗运势', value: '塔罗运势' },
                 { name: '资源档案馆', value: '资源库' }
@@ -168,7 +168,7 @@ const commands = [
                 { name: '纪念日提醒', value: '纪念日' },
                 { name: '碎碎念日记', value: '日记' },
                 { name: '无限剪贴板', value: '剪贴板' },
-                { name: 'AI灵感梗库', value: '灵感梗' },
+                { name: '剧场灵感梗库', value: '灵感梗' },
                 { name: '名场面回忆录', value: '回忆录' },
                 { name: '塔罗运势', value: '塔罗运势' },
                 { name: '资源档案馆', value: '资源库' }
@@ -371,10 +371,10 @@ function checkChannelRestriction(interaction, featureKey) {
 }
 
 const DECISION_PRESETS = {
-    '吃什么': ['火锅', '烧烤', '麻辣烫', '日料寿司', '肯德基/麦当劳', '轻食沙拉', '螺丝粉', '家常炒菜', '喝奶茶代餐!'],
-    '看什么': ['热门新番动画', '悬疑烧脑电影', '轻松搞笑综艺', '治愈系纪录片', '高分美剧/韩剧', '经典老片重温'],
-    '玩什么': ['单机游戏大作', 'Steam 独立小游戏', '去灵感梗库抽卡与 AI 聊天', '整理 Discord 社区', '听音乐放松'],
-    '学什么': ['敲一段新代码', '学个 Prompt 提示词技巧', '看一本技术/人文书', '背 20 个新单词', '研究一个新的小工具']
+    '吃什么': ['火锅', '烧烤', '麻辣烫', '日料寿司', '肯德基/麦当劳', '轻食沙拉', '螺丝粉', '家常炒菜', '喝奶茶代餐!', '拉面/板面', '羊汤', '包子/饺子'],
+    '看什么': ['热门新番动画', '悬疑烧脑电影', '轻松搞笑综艺', '治愈系纪录片', '高分美剧/韩剧', '经典老片重温', '小红书', '抖音', 'B站', '逛dc', '酒馆', '小黑盒', 'steam', '看邓肯', '看戒戒', '看妍妍', '看x调查', 'look at me', 'kpop'],
+    '玩什么': ['单机游戏大作', 'Steam 独立小游戏', '去灵感梗库抽卡', '整理 Discord 社区', '听音乐放松', '聊酒馆', '缝棉花娃娃'],
+    '学什么': ['敲一段新代码', '学个 Prompt 提示词技巧', '看一本技术/人文书', '背 20 个新单词', '研究一个新的小工具', '研制小手机']
 };
 
 const TAROT_CARDS = [
@@ -414,7 +414,7 @@ client.on('interactionCreate', async interaction => {
         if (!interaction.channel.isThread()) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 只能在帖子内部使用哦！' });
         const topMessageUrl = `https://discord.com/channels/${interaction.guildId}/${interaction.channel.id}/${interaction.channel.id}`;
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setLabel('(^ - ^)/ 饱饱急急慢不要来~姐姐来啦 点击直达帖子顶部').setStyle(ButtonStyle.Link).setURL(topMessageUrl)
+            new ButtonBuilder().setLabel('(^ - ^)/ 饱饱急急慢不要来~姐姐来啦').setStyle(ButtonStyle.Link).setURL(topMessageUrl)
         );
         return interaction.reply({ content: '(⁠*⁠^⁠-⁠^⁠*⁠) 摸摸饱饱 点击下方按钮即可快速返回首条消息：', components: [row] });
     }
@@ -524,7 +524,7 @@ client.on('interactionCreate', async interaction => {
         if (commandName === '抽灵感梗') {
             if (!db.promptIdeas || db.promptIdeas.length === 0) return interaction.reply({ content: '(⁠・⁠_⁠・⁠;⁠) 梗库目前是空的哦！' });
             const item = db.promptIdeas[Math.floor(Math.random() * db.promptIdeas.length)];
-            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **为您抽取一个与 AI 互动灵感梗：**\n> ${item.content}` });
+            return interaction.reply({ content: `(⁠/⁠^⁠-⁠^⁠/⁠) **每日小剧场新鲜出炉~：**\n> ${item.content}` });
         }
         if (commandName === '搜灵感梗') {
             const kw = interaction.options.getString('关键词');
